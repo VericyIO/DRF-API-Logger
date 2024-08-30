@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 
 from drf_api_logger.utils import database_log_enabled
@@ -30,6 +31,7 @@ if database_log_enabled():
         status_code = models.PositiveSmallIntegerField(help_text='Response status code', db_index=True)
         execution_time = models.DecimalField(decimal_places=5, max_digits=8,
                                              help_text='Server execution time (Not complete response time.)')
+        service = models.CharField(max_length=100, )
 
         def __str__(self):
             return self.api
@@ -38,3 +40,6 @@ if database_log_enabled():
             db_table = 'drf_api_logs'
             verbose_name = 'API Log'
             verbose_name_plural = 'API Logs'
+
+        def save(self, force_insert, force_update, using, update_fields) -> None:
+            return super().save(force_insert, force_update, using, update_fields)
